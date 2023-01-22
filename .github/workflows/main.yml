@@ -41,4 +41,5 @@ jobs:
       - run: npm test -- --coverage
 
       - name: Jest coverage report
+        working-directory: ./backend
         uses: ArtiomTr/jest-coverage-report-action@v2.1.2
