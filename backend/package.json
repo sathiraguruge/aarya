@@ -4,7 +4,8 @@
   "description": "backend server for aarya e-commerce site",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watchAll"
+    "test": "jest",
+    "test-dev": "jest --watchAll"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,9 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.8.4"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
   }
 }

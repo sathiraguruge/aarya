@@ -12,6 +12,10 @@ describe("api/items", () => {
     await server.close();
   });
 
+  afterAll(async () => {
+    await mongoose.disconnect();
+  });
+
   describe("GET /", () => {
     it("should return all genres", async () => {
       await Item.insertMany([
