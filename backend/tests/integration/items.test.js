@@ -10,6 +10,7 @@ describe("api/items", () => {
   afterEach(async () => {
     await Item.remove({});
     await server.close();
+    await mongoose.connection.close();
   });
 
   describe("GET /", () => {
