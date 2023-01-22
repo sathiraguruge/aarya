@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-
+const config = require("config");
 module.exports = function () {
   mongoose
-    .connect("mongodb://0.0.0.0/aarya_dev")
+    .connect(config.get("db_url"))
     .then(() => {
       console.log("Connected to MongoDB server");
     })

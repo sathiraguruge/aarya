@@ -4,16 +4,16 @@ const { Item } = require("../../models/item");
 
 let server;
 describe("api/items", () => {
-  beforeEach(() => {
+  beforeAll(() => {
     server = require("../../index");
   });
   afterEach(async () => {
-    await Item.remove({});
-    await server.close();
+    await Item.deleteMany({});
   });
 
   afterAll(async () => {
     await mongoose.disconnect();
+    await server.close();
   });
 
   describe("GET /", () => {
