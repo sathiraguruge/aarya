@@ -1,0 +1,25 @@
+{
+  "name": "aarya-backend",
+  "version": "1.0.0",
+  "description": "backend server for aarya e-commerce site",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watchAll"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sathiraguruge/aarya.git"
+  },
+  "author": "Sathira Guruge",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sathiraguruge/aarya/issues"
+  },
+  "homepage": "https://github.com/sathiraguruge/aarya#readme",
+  "dependencies": {
+    "config": "^3.3.9",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.4"
+  }
+}
