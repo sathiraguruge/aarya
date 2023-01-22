@@ -38,4 +38,9 @@ jobs:
           mongodb-version: 6.0.2
 
       - run: npm install
-      - run: npm test
+      - run: npm test -- --coverage
+
+      # - name: Jest coverage report
+      #   uses: ArtiomTr/jest-coverage-report-action@v2.1.2
+      #   with:
+      #     working-directory: ./backend
