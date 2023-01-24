@@ -2,9 +2,10 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const { User } = require("../../models/user");
 
+const URL = "/api/login/";
 let server;
 let payload;
-describe("api/auth", () => {
+describe("api/login", () => {
   beforeAll(() => {
     server = require("../../index");
   });
@@ -28,7 +29,7 @@ describe("api/auth", () => {
     });
 
     it("should return 400 when username is invalid", async () => {
-      const response = await request(server).post("/api/login/").send({
+      const response = await request(server).post(URL).send({
         email: "",
         password: payload.password,
       });
@@ -36,7 +37,7 @@ describe("api/auth", () => {
     });
 
     it("should return 400 when password is invalid", async () => {
-      const response = await request(server).post("/api/login/").send({
+      const response = await request(server).post(URL).send({
         email: payload.email,
         password: "",
       });
@@ -44,7 +45,7 @@ describe("api/auth", () => {
     });
 
     it("should return 200 when user credentials are valid", async () => {
-      const response = await request(server).post("/api/login/").send({
+      const response = await request(server).post(URL).send({
         email: payload.email,
         password: payload.password,
       });

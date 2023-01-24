@@ -4,6 +4,7 @@
   "description": "backend server for aarya e-commerce site",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "jest --maxWorkers=1",
     "test-dev": "jest --watchAll --maxWorkers=1"
   },

@@ -17,7 +17,7 @@ describe("api/items", () => {
   });
 
   describe("GET /", () => {
-    it("should return all genres", async () => {
+    it("should return all items", async () => {
       await Item.insertMany([
         { name: "Google Pixel 7 Pro 12GB RAM 256GB", price: "410755.00" },
         { name: "Google Pixel 7 8GB RAM 256GB", price: "263801.13" },
