@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
 const { User } = require("../models/user");
 const { Item } = require("../models/item");
+Joi.objectId = require("joi-objectid")(Joi);
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -36,7 +38,6 @@ const orderSchema = new mongoose.Schema({
 });
 
 orderSchema.methods.isUserValid = async function () {
-  if (!mongoose.Types.ObjectId.isValid(this.user)) return false;
   const user = await User.findById(this.user);
   if (!user) return false;
 
@@ -46,12 +47,28 @@ orderSchema.methods.isUserValid = async function () {
 orderSchema.methods.isItemsValid = async function () {
   for (let item of this.items) {
     let itemId = item.item;
-    if (!mongoose.Types.ObjectId.isValid(itemId)) return false;
     if (!(await Item.findById(itemId))) return false;
   }
   return true;
 };
 
+function validateSchema(order) {
+  const joiSchema = Joi.object({
+    user: Joi.objectId().required(),
+    items: Joi.array().items({
+      item: Joi.objectId().required(),
+      quantity: Joi.number().optional(),
+    }),
+    orderDate: Joi.date().optional(),
+    status: Joi.string().optional,
+    totalPrice: Joi.number().optional(),
+  });
+
+  const error = joiSchema.validate(order);
+  return error;
+}
+
 const Order = mongoose.model("Order", orderSchema);
 
 module.exports.Order = Order;
+module.exports.validateSchema = validateSchema;

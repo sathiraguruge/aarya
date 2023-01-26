@@ -75,7 +75,7 @@ describe("api/items", () => {
 
   describe("POST /", () => {
     let loginResponse;
-    beforeAll(async () => {
+    beforeEach(async () => {
       loginResponse = await loginCustomer(server);
     });
 
@@ -113,7 +113,7 @@ describe("api/items", () => {
     let loginResponse;
     let itemResponse;
     let updatePayload;
-    beforeAll(async () => {
+    beforeEach(async () => {
       loginResponse = await loginCustomer(server);
       itemResponse = await request(server)
         .post("/api/items/")
@@ -156,12 +156,25 @@ describe("api/items", () => {
         .send(updatePayload);
       expect(response.status).toBe(404);
     });
+
+    it("should return 400 when the upload payload is invalid", async () => {
+      updatePayload = {
+        price: 600,
+        description: "This is a test description 2",
+        tags: ["Kit", "Lamp", "IoT"],
+      };
+      const response = await request(server)
+        .put(`/api/items/${itemResponse.body._id}`)
+        .set("x-auth-token", loginResponse.token)
+        .send(updatePayload);
+      expect(response.status).toBe(400);
+    });
   });
 
   describe("DELETE /:id", () => {
     let loginResponse;
     let itemResponse;
-    beforeAll(async () => {
+    beforeEach(async () => {
       loginResponse = await loginCustomer(server);
       itemResponse = await request(server)
         .post("/api/items/")

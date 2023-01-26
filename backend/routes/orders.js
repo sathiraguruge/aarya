@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Order } = require("../models/order");
+const { Order, validateSchema } = require("../models/order");
 const auth = require("../middleware/auth");
 const validateObjectId = require("../middleware/validateObjectId");
 
@@ -18,7 +18,10 @@ router.get("/:id", validateObjectId, async (req, res) => {
   res.status(200).send(orders);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
   const order = new Order(req.body);
 
   if (!(await order.isUserValid()))
@@ -29,6 +32,25 @@ router.post("/", async (req, res) => {
 
   await order.save();
   res.status(200).send(order);
+});
+
+router.put("/:id", [auth, validateObjectId], async (req, res) => {
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!order)
+    return res.status(404).send("The order with the given ID was not found");
+  res.status(200).send(order);
+});
+
+router.delete("/:id", [auth, validateObjectId], async (req, res) => {
+  const order = await Order.findByIdAndDelete(req.params.id);
+  if (!order)
+    return res.status(404).send("The order with the given ID was not found");
+  res.status(200).send();
 });
 
 module.exports = router;
