@@ -1,19 +1,21 @@
 const mongoose = require("mongoose");
 const request = require("supertest");
 const { Item } = require("../../models/item");
+const { User } = require("../../models/user");
+const { loginCustomer } = require("../util/loginCustomer");
 
 let server;
 describe("api/items", () => {
   beforeAll(() => {
     server = require("../../index");
   });
-  afterEach(async () => {
-    await Item.deleteMany({});
-  });
-
   afterAll(async () => {
     await mongoose.disconnect();
     await server.close();
+  });
+  afterEach(async () => {
+    await Item.deleteMany({});
+    await User.deleteMany({});
   });
 
   describe("GET /", () => {
@@ -27,7 +29,6 @@ describe("api/items", () => {
       const response = await request(server).get("/api/items");
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(3);
-
       expect(
         response.body.some(
           (item) => item.name === "Huawei Nova Y61 6GB RAM 64GB"
@@ -58,9 +59,9 @@ describe("api/items", () => {
     });
 
     it("should return 404 item when invalid id with valid ObjectId is passed", async () => {
-      const id = mongoose.Types.ObjectId();
-      const response = await request(server).get(`/api/items/${id}`);
-
+      const response = await request(server).get(
+        "/api/items/" + mongoose.Types.ObjectId()
+      );
       expect(response.status).toBe(404);
     });
 
@@ -69,6 +70,129 @@ describe("api/items", () => {
 
       expect(response.status).toBe(400);
       expect(response.text).toBe("Invalid ID");
+    });
+  });
+
+  describe("POST /", () => {
+    let loginResponse;
+    beforeAll(async () => {
+      loginResponse = await loginCustomer(server);
+    });
+
+    it("should save an item when the payload is valid", async () => {
+      const payload = {
+        name: "Item 1",
+        price: 1234,
+        description: "This is a test description",
+        tags: ["phone", "electronic", "android"],
+      };
+      const response = await request(server)
+        .post("/api/items/")
+        .set("x-auth-token", loginResponse.token)
+        .send(payload);
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject(payload);
+    });
+
+    it("should return 400 with a error message when the payload is invalid", async () => {
+      const payload = {
+        price: 1234,
+        description: "This is a test description",
+        tags: ["phone", "electronic", "android"],
+      };
+      const response = await request(server)
+        .post("/api/items/")
+        .set("x-auth-token", loginResponse.token)
+        .send(payload);
+      expect(response.status).toBe(400);
+      expect(response.text).not.toBeNull();
+    });
+  });
+
+  describe("PUT /:id", () => {
+    let loginResponse;
+    let itemResponse;
+    let updatePayload;
+    beforeAll(async () => {
+      loginResponse = await loginCustomer(server);
+      itemResponse = await request(server)
+        .post("/api/items/")
+        .set("x-auth-token", loginResponse.token)
+        .send({
+          name: "Item 1",
+          price: 1234,
+          description: "This is a test description",
+          tags: ["phone", "electronic", "android"],
+        });
+      updatePayload = {
+        name: "Item 2",
+        price: 600,
+        description: "This is a test description 2",
+        tags: ["Kit", "Lamp", "IoT"],
+      };
+    });
+
+    it("should update an item when the payload is valid", async () => {
+      const response = await request(server)
+        .put(`/api/items/${itemResponse.body._id}`)
+        .set("x-auth-token", loginResponse.token)
+        .send(updatePayload);
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject(updatePayload);
+    });
+
+    it("should return 400 when item ID is invalid", async () => {
+      const response = await request(server)
+        .put(`/api/items/123`)
+        .set("x-auth-token", loginResponse.token)
+        .send(updatePayload);
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 404 when item ID is not found", async () => {
+      const response = await request(server)
+        .put("/api/items/" + mongoose.Types.ObjectId())
+        .set("x-auth-token", loginResponse.token)
+        .send(updatePayload);
+      expect(response.status).toBe(404);
+    });
+  });
+
+  describe("DELETE /:id", () => {
+    let loginResponse;
+    let itemResponse;
+    beforeAll(async () => {
+      loginResponse = await loginCustomer(server);
+      itemResponse = await request(server)
+        .post("/api/items/")
+        .set("x-auth-token", loginResponse.token)
+        .send({
+          name: "Item 1",
+          price: 1234,
+          description: "This is a test description",
+          tags: ["phone", "electronic", "android"],
+        });
+    });
+
+    it("should delete an item when the id is valid", async () => {
+      const response = await request(server)
+        .delete(`/api/items/${itemResponse.body._id}`)
+        .set("x-auth-token", loginResponse.token);
+      expect(response.status).toBe(200);
+    });
+
+    it("should return 400 when item ID is invalid", async () => {
+      const response = await request(server)
+        .delete(`/api/items/12`)
+        .set("x-auth-token", loginResponse.token);
+      expect(response.status).toBe(400);
+    });
+
+    it("should return 404 when item is not found", async () => {
+      const response = await request(server)
+        .delete(`/api/items/` + mongoose.Types.ObjectId())
+        .set("x-auth-token", loginResponse.token);
+      expect(response.status).toBe(404);
     });
   });
 });

@@ -17,7 +17,7 @@ describe("api/login", () => {
     await User.deleteMany({});
   });
 
-  describe("GET /", () => {
+  describe("POST /", () => {
     beforeEach(async () => {
       payload = {
         firstname: "Andrew",

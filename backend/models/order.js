@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const { User } = require("../models/user");
+const { Item } = require("../models/item");
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -29,10 +31,26 @@ const orderSchema = new mongoose.Schema({
     default: "Pending",
   },
   totalPrice: {
-    required: true,
     type: Number,
   },
 });
+
+orderSchema.methods.isUserValid = async function () {
+  if (!mongoose.Types.ObjectId.isValid(this.user)) return false;
+  const user = await User.findById(this.user);
+  if (!user) return false;
+
+  return true;
+};
+
+orderSchema.methods.isItemsValid = async function () {
+  for (let item of this.items) {
+    let itemId = item.item;
+    if (!mongoose.Types.ObjectId.isValid(itemId)) return false;
+    if (!(await Item.findById(itemId))) return false;
+  }
+  return true;
+};
 
 const Order = mongoose.model("Order", orderSchema);
 

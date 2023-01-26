@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { Item } = require("../models/item");
+const { Item, validateSchema } = require("../models/item");
 const validateObjectId = require("../middleware/validateObjectId");
+const auth = require("../middleware/auth");
 
 router.get("/", async (req, res) => {
   const items = await Item.find().sort("name");
@@ -13,6 +14,34 @@ router.get("/:id", validateObjectId, async (req, res) => {
   if (!item) return res.status(404).send("Item not found ");
 
   res.status(200).send(item);
+});
+
+router.post("/", auth, async (req, res) => {
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const item = new Item(req.body);
+  await item.save();
+  res.status(200).send(item);
+});
+
+router.put("/:id", [auth, validateObjectId], async (req, res) => {
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const item = await Item.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!item)
+    return res.status(404).send("The item with the given ID was not found");
+  res.status(200).send(item);
+});
+
+router.delete("/:id", [auth, validateObjectId], async (req, res) => {
+  const item = await Item.findByIdAndDelete(req.params.id);
+  if (!item)
+    return res.status(404).send("The item with the given ID was not found");
+  res.status(200).send();
 });
 
 module.exports = router;
