@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const Joi = require("joi");
+const { User } = require("../models/user");
+const { Item } = require("../models/item");
+Joi.objectId = require("joi-objectid")(Joi);
 
 const orderSchema = new mongoose.Schema({
   user: {
@@ -29,11 +33,42 @@ const orderSchema = new mongoose.Schema({
     default: "Pending",
   },
   totalPrice: {
-    required: true,
     type: Number,
   },
 });
 
+orderSchema.methods.isUserValid = async function () {
+  const user = await User.findById(this.user);
+  if (!user) return false;
+
+  return true;
+};
+
+orderSchema.methods.isItemsValid = async function () {
+  for (let item of this.items) {
+    let itemId = item.item;
+    if (!(await Item.findById(itemId))) return false;
+  }
+  return true;
+};
+
+function validateSchema(order) {
+  const joiSchema = Joi.object({
+    user: Joi.objectId().required(),
+    items: Joi.array().items({
+      item: Joi.objectId().required(),
+      quantity: Joi.number().optional(),
+    }),
+    orderDate: Joi.date().optional(),
+    status: Joi.string().optional,
+    totalPrice: Joi.number().optional(),
+  });
+
+  const error = joiSchema.validate(order);
+  return error;
+}
+
 const Order = mongoose.model("Order", orderSchema);
 
 module.exports.Order = Order;
+module.exports.validateSchema = validateSchema;
