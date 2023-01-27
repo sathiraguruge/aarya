@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const sanitize = require("mongo-sanitize");
 const { User, validateSchema } = require("../models/user");
 const auth = require("../middleware/auth");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -33,8 +34,8 @@ router.post("/", async (req, res) => {
 router.put("/:id", [auth, validateObjectId], async (req, res) => {
   const { error } = validateSchema(req.body);
   if (error) return res.status(400).send(error.details[0].message);
-
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+  const id = sanitize(req.params.id);
+  const user = await User.findByIdAndUpdate(id, req.body, {
     new: true,
   });
   if (!user)
