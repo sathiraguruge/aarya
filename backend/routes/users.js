@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const sanitize = require("mongo-sanitize");
+const validator = require("validator");
 const { User, validateSchema } = require("../models/user");
 const auth = require("../middleware/auth");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -14,7 +15,8 @@ router.get("/", auth, async (req, res) => {
 
 router.post("/", async (req, res) => {
   const { error } = validateSchema(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res.status(400).send(validator.escape(error.details[0].message));
 
   const user = new User(req.body);
 
@@ -34,7 +36,8 @@ router.post("/", async (req, res) => {
 router.put("/:id", [auth, validateObjectId], async (req, res) => {
   const requestBody = sanitize(req.body);
   const { error } = validateSchema(requestBody);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error)
+    return res.status(400).send(validator.escape(error.details[0].message));
   const id = sanitize(req.params.id);
   const user = await User.findByIdAndUpdate(id, requestBody, {
     new: true,

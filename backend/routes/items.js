@@ -1,7 +1,6 @@
 const express = require("express");
 const sanitize = require("mongo-sanitize");
 const validator = require("validator");
-
 const router = express.Router();
 const { Item, validateSchema } = require("../models/item");
 const validateObjectId = require("../middleware/validateObjectId");
