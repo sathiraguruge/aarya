@@ -1,5 +1,7 @@
 const express = require("express");
 const sanitize = require("mongo-sanitize");
+const validator = require("validator");
+
 const router = express.Router();
 const { Item, validateSchema } = require("../models/item");
 const validateObjectId = require("../middleware/validateObjectId");
@@ -19,7 +21,8 @@ router.get("/:id", validateObjectId, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   const { error } = validateSchema(req.body);
-  if (error) return res.status(400).send(sanitize(error.details[0].message));
+  if (error)
+    return res.status(400).send(validator.escape(error.details[0].message));
 
   const item = new Item(req.body);
   await item.save();
@@ -30,7 +33,7 @@ router.put("/:id", [auth, validateObjectId], async (req, res) => {
   const requestBody = sanitize(req.body);
   const { error } = validateSchema(requestBody);
   if (error) {
-    return res.status(400).send(sanitize(error.details[0].message));
+    return res.status(400).send(validator.escape(error.details[0].message));
   }
 
   const id = sanitize(req.params.id);
