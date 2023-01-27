@@ -19,10 +19,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   const { error } = validateSchema(req.body);
-  if (error) {
-    const errorMessage = error.details[0].message;
-    return res.status(400).send(errorMessage);
-  }
+  if (error) return res.status(400).send(error.details[0].message);
 
   const item = new Item(req.body);
   await item.save();
@@ -32,10 +29,8 @@ router.post("/", auth, async (req, res) => {
 router.put("/:id", [auth, validateObjectId], async (req, res) => {
   const requestBody = sanitize(req.body);
   const { error } = validateSchema(requestBody);
-  if (error) {
-    const errorMessage = error.details[0].message;
-    return res.status(400).send(errorMessage);
-  }
+  if (error) return res.status(400).send(error.details[0].message);
+
   const id = sanitize(req.params.id);
 
   const item = await Item.findByIdAndUpdate(id, requestBody, {

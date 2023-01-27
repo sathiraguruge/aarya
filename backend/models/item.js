@@ -35,7 +35,7 @@ function validateSchema(item) {
     tags: Joi.array().items(Joi.string().optional()),
   });
 
-  const error = joiSchema.validate(item);
+  const error = joiSchema.validate(item, { escapeHtml: true });
   return error;
 }
 
