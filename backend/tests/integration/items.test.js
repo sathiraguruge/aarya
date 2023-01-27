@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const request = require("supertest");
 const { Item } = require("../../models/item");
 const { User } = require("../../models/user");
-const { loginCustomer } = require("../util/loginCustomer");
+const { createAndLoginCustomer } = require("../util/loginCustomer");
 
 let server;
 describe("api/items", () => {
@@ -76,7 +76,7 @@ describe("api/items", () => {
   describe("POST /", () => {
     let loginResponse;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
     });
 
     it("should save an item when the payload is valid", async () => {
@@ -114,7 +114,7 @@ describe("api/items", () => {
     let itemResponse;
     let updatePayload;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
       itemResponse = await request(server)
         .post("/api/items/")
         .set("x-auth-token", loginResponse.token)
@@ -168,6 +168,7 @@ describe("api/items", () => {
         .set("x-auth-token", loginResponse.token)
         .send(updatePayload);
       expect(response.status).toBe(400);
+      expect(response.text).not.toBeNull();
     });
   });
 
@@ -175,7 +176,7 @@ describe("api/items", () => {
     let loginResponse;
     let itemResponse;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
       itemResponse = await request(server)
         .post("/api/items/")
         .set("x-auth-token", loginResponse.token)

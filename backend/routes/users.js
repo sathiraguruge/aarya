@@ -1,8 +1,9 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
-const router = express.Router();
-const { User } = require("../models/user");
+const { User, validateSchema } = require("../models/user");
 const auth = require("../middleware/auth");
+const validateObjectId = require("../middleware/validateObjectId");
+const router = express.Router();
 const saltRounds = 10;
 
 router.get("/", auth, async (req, res) => {
@@ -11,7 +12,10 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const user = await new User(req.body);
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const user = new User(req.body);
 
   if (await user.userExists()) {
     return res.status(400).send("User already registered");
@@ -24,6 +28,25 @@ router.post("/", async (req, res) => {
   const token = user.generateAuthToken();
 
   return res.header("x-auth-token", token).send(200);
+});
+
+router.put("/:id", [auth, validateObjectId], async (req, res) => {
+  const { error } = validateSchema(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!user)
+    return res.status(404).send("The user with the given ID was not found");
+  res.status(200).send(user);
+});
+
+router.delete("/:id", [auth, validateObjectId], async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  if (!user)
+    return res.status(404).send("The user with the given ID was not found");
+  res.status(200).send();
 });
 
 module.exports = router;
