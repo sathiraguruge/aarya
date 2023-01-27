@@ -1,4 +1,5 @@
 const express = require("express");
+const sanitize = require("mongo-sanitize");
 const router = express.Router();
 const { Order, validateSchema } = require("../models/order");
 const auth = require("../middleware/auth");
@@ -35,10 +36,13 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", [auth, validateObjectId], async (req, res) => {
-  const { error } = validateSchema(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  const requestBody = sanitize(req.body);
 
-  const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+  const { error } = validateSchema(requestBody);
+  if (error) return res.status(400).send(error.details[0].message);
+  const id = sanitize(req.params.id);
+
+  const order = await Order.findByIdAndUpdate(id, requestBody, {
     new: true,
   });
   if (!order)

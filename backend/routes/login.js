@@ -1,15 +1,17 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const sanitize = require("mongo-sanitize");
 const router = express.Router();
 const { User } = require("../models/user");
 
 const saltRounds = 10;
 
 router.post("/", async (req, res) => {
-  const user = await User.findOne({ email: req.body.email });
+  const email = sanitize(req.body.email);
+  const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(400).send("Invalid Username/password");
+    return res.status(400).send("Invalid Username/password !");
   }
 
   const isPasswordValid = await bcrypt.compare(
