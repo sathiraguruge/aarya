@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-var config = require("config");
+const config = require("config");
+const Joi = require("joi");
 
 const userSchema = new mongoose.Schema({
   firstname: {
@@ -31,8 +32,6 @@ const userSchema = new mongoose.Schema({
     required: false,
     type: Number,
     validator: Number.isInteger,
-    minlength: 10,
-    maxlength: 10,
   },
   email: {
     required: true,
@@ -58,6 +57,22 @@ userSchema.methods.userExists = async function () {
   return false;
 };
 
+function validateSchema(user) {
+  const joiSchema = Joi.object({
+    firstname: Joi.string().min(5).max(10).required(),
+    lastname: Joi.string().min(5).max(10).required(),
+    phone: Joi.string().min(10).max(10).optional(),
+    address: Joi.string().min(8).max(50).optional(),
+    zipcode: Joi.number().integer().optional(),
+    email: Joi.string().min(5).max(50).required(),
+    password: Joi.string().min(8).required(),
+  });
+
+  const error = joiSchema.validate(user);
+  return error;
+}
+
 const User = mongoose.model("User", userSchema);
 
 module.exports.User = User;
+module.exports.validateSchema = validateSchema;

@@ -6,7 +6,7 @@ const { Item } = require("../../models/item");
 
 const { createUser } = require("../util/createUser");
 const { createItem } = require("../util/createItem");
-const { loginCustomer } = require("../util/loginCustomer");
+const { createAndLoginCustomer } = require("../util/loginCustomer");
 
 let server;
 describe("api/orders", () => {
@@ -88,7 +88,7 @@ describe("api/orders", () => {
   describe("POST /", () => {
     let loginResponse;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
     });
 
     it("should create a new order when payload is valid", async () => {
@@ -220,7 +220,7 @@ describe("api/orders", () => {
     let user1;
     let item1;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
       user1 = await createUser(
         "Andrew",
         "Peterson",
@@ -317,7 +317,7 @@ describe("api/orders", () => {
     let loginResponse;
     let orderResponse;
     beforeEach(async () => {
-      loginResponse = await loginCustomer(server);
+      loginResponse = await createAndLoginCustomer(server);
       const user1 = await createUser(
         "Andrew",
         "Peterson",
