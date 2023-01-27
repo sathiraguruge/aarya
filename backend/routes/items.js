@@ -30,14 +30,15 @@ router.post("/", auth, async (req, res) => {
 });
 
 router.put("/:id", [auth, validateObjectId], async (req, res) => {
-  const { error } = validateSchema(req.body);
+  const requestBody = sanitize(req.body);
+  const { error } = validateSchema(requestBody);
   if (error) {
     const errorMessage = error.details[0].message;
     return res.status(400).send(errorMessage);
   }
   const id = sanitize(req.params.id);
 
-  const item = await Item.findByIdAndUpdate(id, req.body, {
+  const item = await Item.findByIdAndUpdate(id, requestBody, {
     new: true,
   });
   if (!item)
