@@ -1,4 +1,7 @@
 {
   "jwtPrivateKey": "AARYA_JWT_KEY",
-  "db_url": "AARYA_DB_URL"
+  "db": {
+    "url": "AARYA_DB_URL",
+    "name": "AARYA_DB_NAME"
+  }
 }

@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const Joi = require("joi");
+const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema({
   firstname: {
@@ -55,6 +56,13 @@ userSchema.methods.userExists = async function () {
   const user = await User.findOne({ email: this.email });
   if (user) return true;
   return false;
+};
+
+userSchema.statics.hashPassword = async function (password) {
+  const saltRounds = 10;
+  const salt = await bcrypt.genSalt(saltRounds);
+  password = await bcrypt.hash(password, salt);
+  return password;
 };
 
 function validateSchema(user) {

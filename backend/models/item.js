@@ -17,7 +17,7 @@ const itemSchema = new mongoose.Schema({
     required: false,
     type: String,
     minlength: 10,
-    maxlength: 50,
+    maxlength: 500,
   },
   image: {
     required: false,
@@ -30,7 +30,7 @@ function validateSchema(item) {
   const joiSchema = Joi.object({
     name: Joi.string().min(5).max(40).required(),
     price: Joi.number().optional(),
-    description: Joi.string().min(10).max(50).required(),
+    description: Joi.string().min(10).max(500).required(),
     image: Joi.string().optional(),
     tags: Joi.array().items(Joi.string().optional()),
   });
