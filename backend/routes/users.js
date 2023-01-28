@@ -1,12 +1,10 @@
 const express = require("express");
-const bcrypt = require("bcryptjs");
 const sanitize = require("mongo-sanitize");
 const validator = require("validator");
 const { User, validateSchema } = require("../models/user");
 const auth = require("../middleware/auth");
 const validateObjectId = require("../middleware/validateObjectId");
 const router = express.Router();
-const saltRounds = 10;
 
 router.get("/", auth, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password");
@@ -24,8 +22,7 @@ router.post("/", async (req, res) => {
     return res.status(400).send("User already registered");
   }
 
-  const salt = await bcrypt.genSalt(saltRounds);
-  user.password = await bcrypt.hash(user.password, salt);
+  user.password = await User.hashPassword(user.password);
 
   await user.save();
   const token = user.generateAuthToken();

@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 const config = require("config");
 module.exports = function () {
+  const { url, name } = config.get("db");
+
   mongoose
-    .connect(config.get("db_url"))
+    .connect(`${url}/${name}`)
     .then(() => {
       console.log("Connected to MongoDB server");
     })

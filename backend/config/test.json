@@ -1,6 +1,9 @@
 {
   "jwtPrivateKey": "1234",
-  "db_url": "mongodb://0.0.0.0/aarya_test",
+  "db": {
+    "url": "mongodb://0.0.0.0",
+    "name": "aarya_test"
+  },
   "rateLimit": {
     "max": 100
   }
