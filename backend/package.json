@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "migrate": "migrate-mongo up",
     "test": "jest --maxWorkers=1",
     "test-dev": "jest --watchAll --maxWorkers=1 --coverage"
   },
