@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    environment:
+      - AARYA_DB_URL=mongodb://database
+    ports:
+      - 6000:3000
+  database:
+    image: mongo:4.0-xenial
+    ports:
+      - 27017:27017
+    volumes:
+      - aarya:/data/db
+volumes:
+  aarya:

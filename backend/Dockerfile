@@ -5,8 +5,12 @@ RUN npm install
 COPY . .
 EXPOSE 3000
 
-ARG DOCKER_AARYA_JWT_KEY
-ENV AARYA_JWT_KEY=$DOCKER_AARYA_JWT_KEY
+ARG AARYA_JWT_KEY
+ARG AARYA_DB_NAME
 
+ENV AARYA_JWT_KEY=$AARYA_JWT_KEY
+ENV AARYA_DB_NAME=$AARYA_DB_NAME
 
-CMD ["npm", "start"]
+RUN npm install -g migrate-mongo
+
+CMD npm run migrate;npm start
