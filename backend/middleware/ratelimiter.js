@@ -5,4 +5,6 @@ const limiter = rateLimit({
   max: config.get("rateLimit.max"),
 });
 
-module.exports = limiter;
+module.exports = function (app) {
+  app.use(limiter);
+};
