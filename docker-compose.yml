@@ -5,7 +5,7 @@ services:
     environment:
       - AARYA_DB_URL=mongodb://database
     ports:
-      - 6000:3000
+      - 3001:3001
   database:
     image: mongo:4.0-xenial
     ports:
