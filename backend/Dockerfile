@@ -3,7 +3,7 @@ WORKDIR /backend
 COPY package*.json .
 RUN npm install
 COPY . .
-EXPOSE 3000
+EXPOSE 3001
 
 ARG AARYA_JWT_KEY
 ARG AARYA_DB_NAME
