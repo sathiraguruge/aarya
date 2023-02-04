@@ -3,7 +3,7 @@ name: Docker CI/CD pipeline
 on:
   push:
     branches:
-      - "main"
+      - "ci-cd-test"
 
 env:
   DOCKER_HUB_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
