@@ -1,8 +1,8 @@
 FROM node:19.0.0-buster-slim
 WORKDIR /backend
-COPY package*.json .
+COPY package*.json ./
 RUN npm install
-COPY . .
+COPY . ./
 EXPOSE 3001
 
 ARG AARYA_JWT_KEY
