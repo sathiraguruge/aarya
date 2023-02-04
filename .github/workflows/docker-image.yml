@@ -15,6 +15,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     environment: Production
+    defaults:
+      run:
+        working-directory: ./backend
     steps:
       -
         name: Checkout
@@ -33,6 +36,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./backend/Dockerfile
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/aarya:latest
