@@ -1,0 +1,27 @@
+name: Docker CI/CD pipeline
+
+on:
+  push:
+    branches:
+      - "main"
+
+env:
+  DOCKER_HUB_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
+  DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
+  AARYA_DB_NAME: ${{secrets.AARYA_DB_NAME}}
+  AARYA_JWT_KEY: ${{secrets.AARYA_JWT_KEY}}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack
+        run: docker-compose build --build-arg AARYA_JWT_KEY=${{env.AARYA_JWT_KEY}} --build-arg AARYA_DB_NAME=${{AARYA_DB_NAME}}
+      - name: Docker Login
+        run: docker login --username=${{env.DOCKER_HUB_USERNAME}} --password=$DOCKER_PASS
+      - name: Docker Build
+        run: docker-compose build --build-arg AARYA_JWT_KEY=${{env.DOCKER_HUB_USERNAME}} --build-arg AARYA_DB_URL=mongodb://0.0.0.0 --build-arg AARYA_DB_NAME=aarya --no-cache
+      - name: Docker Push
+        run: docker compose push
