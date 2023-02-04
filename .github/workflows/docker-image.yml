@@ -1,41 +1,32 @@
-name: Docker CI/CD pipeline
-
 on:
   push:
     branches:
-      - "main"
+      - "ci-cd-test"
 
 env:
-  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
-  DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-  AARYA_DB_NAME: ${{ secrets.AARYA_DB_NAME }}
-  AARYA_JWT_KEY: ${{ secrets.AARYA_JWT_KEY }}
+  DOCKER_HUB_USERNAME: ${{secrets.DOCKER_HUB_USERNAME}}
+  DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
+  AARYA_DB_NAME: ${{secrets.AARYA_DB_NAME}}
+  AARYA_JWT_KEY: ${{secrets.AARYA_JWT_KEY}}
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     environment: Production
-    defaults:
-      run:
-        working-directory: ./backend
     steps:
       -
-        name: Checkout
-        uses: actions/checkout@v3
+       name: Checkout repository
+       uses: actions/checkout@v3
+
       -
         name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/aarya:latest
+          username: ${{env.DOCKER_HUB_USERNAME}}
+          password: ${{env.DOCKERHUB_TOKEN}}        
+        
+      - name: Docker Build
+        run: docker-compose build --build-arg AARYA_JWT_KEY=${{env.DOCKER_HUB_USERNAME}} --build-arg AARYA_DB_NAME=${{env.AARYA_DB_NAME}}
+        
+      - name: Docker Push
+        run: docker compose push
