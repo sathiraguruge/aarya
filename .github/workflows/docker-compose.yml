@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
-        run: docker-compose build --build-arg AARYA_JWT_KEY=${{env.AARYA_JWT_KEY}} --build-arg AARYA_DB_NAME=${{AARYA_DB_NAME}}
+        run: docker-compose build --build-arg AARYA_JWT_KEY=${{env.AARYA_JWT_KEY}} --build-arg AARYA_DB_NAME=${{env.AARYA_DB_NAME}}
       - name: Docker Login
         run: docker login --username=${{env.DOCKER_HUB_USERNAME}} --password=$DOCKER_PASS
       - name: Docker Build
