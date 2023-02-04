@@ -33,6 +33,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./backend/docker-compose.yml
+          file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/aarya:latest
