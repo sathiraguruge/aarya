@@ -38,4 +38,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/aarya:latest
+          tags: ${{env.DOCKER_HUB_USERNAME}}/aarya:${{env.TAG_NAME}}
