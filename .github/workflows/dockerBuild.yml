@@ -3,7 +3,7 @@ name: Docker CI/CD pipeline
 on:
   push:
     branches:
-      - "ci-cd-test"
+      - "main"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
