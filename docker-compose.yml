@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   backend:
+    image: sathirahguruge/aarya_backend:1
     build: ./backend
     environment:
       - AARYA_DB_URL=mongodb://database
