@@ -1,7 +1,7 @@
 import httpService from "./httpService";
 
 const login = async function (email, password) {
-  const response = await httpService.post("http://localhost:3001/api/login", {
+  const response = await httpService.post("login", {
     email,
     password,
   });
@@ -10,6 +10,22 @@ const login = async function (email, password) {
   }
 };
 
+const logout = function () {
+  localStorage.removeItem("token");
+};
+
+const isLoggedIn = function () {
+  const token = localStorage.getItem("token");
+  if (!token) return false;
+  return true;
+};
+
+const getToken = function () {
+  return localStorage.getItem("token");
+};
+
 export default {
   login,
+  logout,
+  getToken,
 };

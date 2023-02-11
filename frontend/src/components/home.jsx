@@ -24,7 +24,7 @@ class Home extends Component {
               <Card.Title>{item.name}</Card.Title>
               <Card.Text>{item.description}</Card.Text>
               <Card.Text>{item.price}</Card.Text>
-              <Button variant="primary">Go somewhere</Button>
+              <Button variant="primary">Add to Cart</Button>
             </Card.Body>
           </Card>
         ))}

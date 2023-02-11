@@ -1,9 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import authService from "../../services/authService";
 
 const NavigationBar = () => {
   return (
@@ -20,15 +18,24 @@ const NavigationBar = () => {
                 <Link to="/">Home</Link>
               </Nav.Link>
               <Nav.Link></Nav.Link>
-              <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                <NavDropdown.Item>My Account</NavDropdown.Item>
-                <NavDropdown.Item>Profile</NavDropdown.Item>
+              <NavDropdown title="My Account" id="basic-nav-dropdown">
+                <NavDropdown.Item>
+                  <Link to="/profile">Profile</Link>
+                </NavDropdown.Item>
                 <NavDropdown.Item>
                   <Link to="/orders">Orders</Link>
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item>Login</NavDropdown.Item>
-                <NavDropdown.Item>Log Out</NavDropdown.Item>
+                <NavDropdown.Item>
+                  <Link to="/login">Login</Link>
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    authService.logout();
+                  }}
+                >
+                  Log Out
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

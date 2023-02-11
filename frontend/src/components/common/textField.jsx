@@ -1,6 +1,30 @@
-const TextField = ({ id, name, type, value, onChange }) => {
+import Form from "react-bootstrap/Form";
+
+const TextField = ({
+  id,
+  name,
+  type,
+  value,
+  label,
+  onChange,
+  placeholder,
+  hint,
+  isDisabled,
+}) => {
   return (
-    <input id={id} name={name} type={type} value={value} onChange={onChange} />
+    <Form.Group className="mb-3" controlId="formBasicEmail">
+      <Form.Label>{label}</Form.Label>
+      <Form.Control
+        id={id}
+        type={type}
+        onChange={onChange}
+        value={value}
+        name={name}
+        placeholder={placeholder}
+        disabled={isDisabled === true ? true : false}
+      />
+      <Form.Text className="text-muted">{hint}</Form.Text>
+    </Form.Group>
   );
 };
 

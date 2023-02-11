@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import TextField from "./textField";
 
-class Form extends Component {
+class CustomForm extends Component {
   state = {
     data: {
       username: "",
@@ -20,12 +20,16 @@ class Form extends Component {
     this.doSubmit();
   };
 
-  renderTextField(id, name, type) {
+  renderTextField(id, name, type, label, placeholder, hint, isDisabled) {
     return (
       <TextField
         id={id}
         name={name}
         type={type}
+        label={label}
+        placeholder={placeholder}
+        hint={hint}
+        isDisabled={isDisabled}
         value={this.state.data[name]}
         onChange={this.handleChange}
       />
@@ -33,4 +37,4 @@ class Form extends Component {
   }
 }
 
-export default Form;
+export default CustomForm;
