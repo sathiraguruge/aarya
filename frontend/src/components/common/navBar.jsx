@@ -3,39 +3,66 @@ import { Link } from "react-router-dom";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import authService from "../../services/authService";
 
-const NavigationBar = () => {
+const renderNavItem = (label, to) => {
+  return (
+    <Nav.Link>
+      <Link to={to} style={{ color: "inherit", textDecoration: "inherit" }}>
+        {label}
+      </Link>
+    </Nav.Link>
+  );
+};
+const renderDropDownItem = (label, to) => {
+  return (
+    <NavDropdown.Item>
+      <Link to={to} style={{ color: "inherit", textDecoration: "inherit" }}>
+        {label}
+      </Link>
+    </NavDropdown.Item>
+  );
+};
+
+const NavigationBar = ({ user, onHandleLogin }) => {
   return (
     <React.Fragment>
       <Navbar bg="light" expand="lg">
         <Container>
           <Navbar.Brand>
-            <Link to="/">Aarya</Link>
+            <Link
+              to="/"
+              style={{ color: "inherit", textDecoration: "inherit" }}
+            >
+              Aarya
+            </Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link>
-                <Link to="/">Home</Link>
-              </Nav.Link>
-              <Nav.Link></Nav.Link>
+              {renderNavItem("Home", "/")}
               <NavDropdown title="My Account" id="basic-nav-dropdown">
-                <NavDropdown.Item>
-                  <Link to="/profile">Profile</Link>
-                </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <Link to="/orders">Orders</Link>
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item>
-                  <Link to="/login">Login</Link>
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => {
-                    authService.logout();
-                  }}
-                >
-                  Log Out
-                </NavDropdown.Item>
+                {user.isLoggedIn && (
+                  <React.Fragment>
+                    {renderDropDownItem("Profile", "/profile")}
+                    {renderDropDownItem("Orders", "/orders")}
+                    <NavDropdown.Divider />
+                  </React.Fragment>
+                )}
+                {!user.isLoggedIn && (
+                  <React.Fragment>
+                    {renderDropDownItem("Login", "/login")}
+                    {renderDropDownItem("Register", "/register")}
+                  </React.Fragment>
+                )}
+                {user.isLoggedIn && (
+                  <NavDropdown.Item
+                    onClick={() => {
+                      onHandleLogin(false);
+                      authService.logout();
+                    }}
+                  >
+                    Log Out
+                  </NavDropdown.Item>
+                )}
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>

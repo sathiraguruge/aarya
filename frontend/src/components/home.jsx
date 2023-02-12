@@ -18,7 +18,7 @@ class Home extends Component {
       <div>
         <h1>Arrya</h1>
         {this.state.items.map((item) => (
-          <Card style={{ width: "18rem" }}>
+          <Card style={{ width: "18rem" }} key={item._id}>
             <Card.Img variant="top" src="holder.js/100px180" />
             <Card.Body>
               <Card.Title>{item.name}</Card.Title>

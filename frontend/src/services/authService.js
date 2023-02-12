@@ -7,7 +7,9 @@ const login = async function (email, password) {
   });
   if (response.status === 200) {
     localStorage.setItem("token", response.headers["x-auth-token"]);
+    return true;
   }
+  return false;
 };
 
 const logout = function () {
@@ -28,4 +30,5 @@ export default {
   login,
   logout,
   getToken,
+  isLoggedIn,
 };

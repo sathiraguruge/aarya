@@ -3,6 +3,7 @@ import CustomForm from "./common/form";
 import authService from "../services/authService";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Joi from "joi";
 
 class Login extends CustomForm {
   state = {
@@ -13,8 +14,23 @@ class Login extends CustomForm {
   };
 
   doSubmit = async () => {
+    // this.validate();
     const { email, password } = this.state.data;
-    await authService.login(email, password);
+    if (await authService.login(email, password))
+      this.props.onHandleLogin(true);
+  };
+
+  validate = () => {
+    const { email, password } = this.state.data;
+    const schema = Joi.object({
+      email: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+    const { error, value } = schema.validate(
+      { email, password },
+      { abortEarly: false }
+    );
+    console.log(error);
   };
 
   render() {
