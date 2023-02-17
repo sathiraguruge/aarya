@@ -12,9 +12,13 @@ const renderNavItem = (label, to) => {
     </Nav.Link>
   );
 };
-const renderDropDownItem = (label, to) => {
+const renderDropDownItem = (label, to, handleClick) => {
   return (
-    <NavDropdown.Item>
+    <NavDropdown.Item
+      onClick={() => {
+        if (handleClick) handleClick();
+      }}
+    >
       <Link to={to} style={{ color: "inherit", textDecoration: "inherit" }}>
         {label}
       </Link>
@@ -53,16 +57,11 @@ const NavigationBar = ({ user, onHandleLogin }) => {
                     {renderDropDownItem("Register", "/register")}
                   </React.Fragment>
                 )}
-                {user.isLoggedIn && (
-                  <NavDropdown.Item
-                    onClick={() => {
-                      onHandleLogin(false);
-                      authService.logout();
-                    }}
-                  >
-                    Log Out
-                  </NavDropdown.Item>
-                )}
+                {user.isLoggedIn &&
+                  renderDropDownItem("Log Out", "/", () => {
+                    onHandleLogin(false);
+                    authService.logout();
+                  })}
               </NavDropdown>
             </Nav>
           </Navbar.Collapse>
