@@ -1,7 +1,7 @@
 import httpService from "./httpService";
 
 const getUserDetails = async function () {
-  const response = await httpService.getWithToken("users");
+  const response = await httpService.get("users");
   return response.data;
 };
 

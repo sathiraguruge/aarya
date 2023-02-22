@@ -1,4 +1,8 @@
+import { ToastContainer } from "react-toastify";
+import { Navigate, Route, Routes } from "react-router-dom";
+import React, { Component } from "react";
 import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
 import NavigationBar from "./components/common/navBar";
 import Login from "./components/login";
 import HomePage from "./components/home";
@@ -6,8 +10,6 @@ import NotFound from "./components/notFound";
 import Register from "./components/register";
 import Orders from "./components/orders";
 import MyAccount from "./components/profile";
-import { Navigate, Route, Routes } from "react-router-dom";
-import React, { Component } from "react";
 import authService from "./services/authService";
 
 class App extends Component {
@@ -39,6 +41,7 @@ class App extends Component {
           user={this.state.user}
           onHandleLogin={this.handleLogin}
         />
+        <ToastContainer />
         <Routes>
           <Route
             path="/login"
