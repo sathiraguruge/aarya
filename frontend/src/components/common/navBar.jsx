@@ -5,7 +5,7 @@ import authService from "../../services/authService";
 
 const renderNavItem = (label, to) => {
   return (
-    <Nav.Link>
+    <Nav.Link as="li">
       <Link to={to} style={{ color: "inherit", textDecoration: "inherit" }}>
         {label}
       </Link>
@@ -18,6 +18,7 @@ const renderDropDownItem = (label, to, handleClick) => {
       onClick={() => {
         if (handleClick) handleClick();
       }}
+      as="li"
     >
       <Link to={to} style={{ color: "inherit", textDecoration: "inherit" }}>
         {label}
