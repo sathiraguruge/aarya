@@ -7,7 +7,6 @@ import authService from "../services/authService";
 
 class Login extends CustomForm {
   state = {
-    isSubmitVisisble: true,
     data: {
       email: "",
       password: "",
@@ -29,19 +28,6 @@ class Login extends CustomForm {
       this.props.onHandleLogin(true);
       toast.info("Logged in successfully");
     }
-  };
-
-  validate = () => {
-    const { email, password } = this.state.data;
-    const schema = Joi.object({
-      email: Joi.string().required(),
-      password: Joi.string().required(),
-    });
-    const { error, value } = schema.validate(
-      { email, password },
-      { abortEarly: false }
-    );
-    console.log(error);
   };
 
   render() {
