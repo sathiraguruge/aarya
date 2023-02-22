@@ -1,25 +1,62 @@
-import logo from './logo.svg';
-import './App.css';
+import { ToastContainer } from "react-toastify";
+import { Navigate, Route, Routes } from "react-router-dom";
+import React, { Component } from "react";
+import "./App.css";
+import "react-toastify/dist/ReactToastify.css";
+import NavigationBar from "./components/common/navBar";
+import Login from "./components/login";
+import HomePage from "./components/home";
+import NotFound from "./components/notFound";
+import Register from "./components/register";
+import Orders from "./components/orders";
+import MyAccount from "./components/profile";
+import authService from "./services/authService";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  state = {
+    user: {
+      isLoggedIn: false,
+    },
+  };
+
+  componentDidMount() {
+    let user = {
+      isLoggedIn: false,
+    };
+    user["isLoggedIn"] = authService.isLoggedIn();
+    this.setState({ user });
+  }
+
+  handleLogin = (loginBool) => {
+    let user = {
+      isLoggedIn: loginBool,
+    };
+    this.setState({ user });
+  };
+
+  render() {
+    return (
+      <React.Fragment>
+        <NavigationBar
+          user={this.state.user}
+          onHandleLogin={this.handleLogin}
+        />
+        <ToastContainer />
+        <Routes>
+          <Route
+            path="/login"
+            element={<Login onHandleLogin={this.handleLogin} />}
+          />
+          <Route path="/register" element={<Register />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/profile" element={<MyAccount />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<Navigate to="/not-found" replace />} />
+        </Routes>
+      </React.Fragment>
+    );
+  }
 }
 
 export default App;
