@@ -18,14 +18,13 @@ const TextField = ({
       <Form.Control
         type={type}
         onChange={onChange}
+        d
         value={value}
         name={name}
         placeholder={placeholder}
-        disabled={isDisabled === true ? true : false}
+        disabled={isDisabled}
       />
-      {true && (
-        <Form.Control.Feedback type="invalid">Invalid</Form.Control.Feedback>
-      )}
+      {error && <div className="alert alert-danger">{error}</div>}
       <Form.Text className="text-muted">{hint}</Form.Text>
     </Form.Group>
   );
