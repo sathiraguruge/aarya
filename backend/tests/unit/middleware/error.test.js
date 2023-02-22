@@ -1,4 +1,4 @@
-const error = require("../../../../middleware/error");
+const error = require("../../../middleware/error");
 
 describe("error middleware", () => {
   it("should return 500 if an exception is thrown", () => {
