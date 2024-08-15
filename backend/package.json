@@ -30,7 +30,7 @@
     "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^9.0.0",
     "mongo-sanitize": "^1.1.0",
-    "mongoose": "^6.8.4",
+    "mongoose": "^6.12.0",
     "validator": "^13.7.0"
   },
   "devDependencies": {
